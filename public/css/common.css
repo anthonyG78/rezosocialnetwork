@@ -1,0 +1,230 @@
+/*!
+ * From Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ */
+/*!
+ * From Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ */
+.bg-white {
+  background-color: #fff !important; }
+
+.bg-cover {
+  background-position: center;
+  background-size: cover; }
+
+/*!
+ * From Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ */
+.btn-reverse {
+  color: #fff;
+  background-color: #292b2c;
+  border-color: #292b2c; }
+  .btn-reverse:hover {
+    color: #fff;
+    background-color: #101112;
+    border-color: #0b0c0c; }
+  .btn-reverse:focus, .btn-reverse.focus {
+    box-shadow: 0 0 0 2px rgba(41, 43, 44, 0.5); }
+  .btn-reverse.disabled, .btn-reverse:disabled {
+    background-color: #292b2c;
+    border-color: #292b2c; }
+  .btn-reverse:active, .btn-reverse.active,
+  .show > .btn-reverse.dropdown-toggle {
+    color: #fff;
+    background-color: #101112;
+    background-image: none;
+    border-color: #0b0c0c; }
+
+/*!
+ * From Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ */
+/*AUTOCOMPLETE*/
+.list-autocomplete {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  box-shadow: 0.5em 0.5em 0em rgba(0, 0, 0, 0.33); }
+
+/*!
+ * From Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ */
+.header {
+  background-position: center;
+  background-size: cover;
+  color: #fff;
+  position: relative;
+  border-radius: none;
+  margin-bottom: 0; }
+
+.header:before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(75, 75, 75, 0.66); }
+
+.header > * {
+  position: relative; }
+
+/*!
+ * From Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ */
+.menu {
+  position: fixed;
+  width: 80%;
+  height: 100%;
+  background: #FFF;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  box-shadow: 0.5em 0 0.5em rgba(0, 0, 0, 0.33);
+  transform: translateX(-100%);
+  transition: transform .25s ease-in-out; }
+
+.menu.open {
+  transform: translateX(0%); }
+
+@media screen and (min-width: 1200px) {
+  .menu {
+    width: 25%; } }
+
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+  .menu {
+    width: 40%; } }
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .menu {
+    width: 50%; } }
+
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .menu {
+    width: 60%; } }
+
+body.menu-opened {
+  overflow: hidden; }
+
+body.menu-opened:after {
+  content: '';
+  display: block;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10; }
+
+/*!
+ * From Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ */
+.card {
+  border: none; }
+
+.card-img-top {
+  width: 100%; }
+
+.card .bg-cover {
+  width: 100%;
+  height: 200px; }
+
+.card-group .card {
+  margin: 0 1px 1px 0; }
+
+.card-footer {
+  background-color: transparent; }
+
+.card-text {
+  min-height: 3em;
+  max-height: 6em;
+  position: relative;
+  overflow: hidden; }
+  .card-text:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2em;
+    position: absolute;
+    bottom: 0;
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, white 100%);
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, white 100%);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 ); }
+
+@media screen and (min-width: 576px) {
+  .card-text {
+    height: 6em; } }
+
+@media screen and (max-width: 576px) {
+  .card-group .card {
+    margin: 0 0 1em 0; } }
+
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .card-group .card {
+    margin: 0 1px 1px 0;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 0 45%;
+    -ms-flex: 1 0 45%;
+    flex: 1 0 45%; } }
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .card-group .card {
+    margin: 0 1px 1px 0;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 0 33%;
+    -ms-flex: 1 0 33%;
+    flex: 1 0 33%; } }
+
+@media screen and (min-width: 992px) {
+  .card-group .card {
+    margin: 0 1px 1px 0;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 0 20%;
+    -ms-flex: 1 0 20%;
+    flex: 1 0 20%; } }
+
+/*!
+ * From Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ */
+.fa-bars + .navbar-brand {
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  color: #FFF; }
+
+@font-face {
+  font-family: 'Roboto';
+  src: url("../fonts/roboto/Roboto-Regular.woff"); }
+
+html, body {
+  height: 100%;
+  font-family: 'Roboto'; }
+
+main {
+  min-height: 100%; }
+
+.header {
+  background-image: url(../img/rezo-jumbotron-bg.jpg); }
+
+a.fa {
+  padding: 0.25em;
+  text-decoration: none; }
+
+.fa + span {
+  margin-left: 0.25em; }
+
+.btn-file {
+  position: relative;
+  overflow: hidden; }
+  .btn-file input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; }
+  .btn-file label {
+    display: inline; }

@@ -1,0 +1,37 @@
+{
+  "name": "rezo",
+  "version": "1.0.0",
+  "description": "Mon premier réseau social",
+  "main": "",
+  "config": {
+    "port": "9999"
+  },
+  "engines": {
+    "node": "5.9.1"
+  },
+  "scripts": {
+    "devStart": "echo doudou@78 | sudo -S mongod --dbpath /home/anthony/travail/mongodata/ --port 27017 --fork --logpath ./var/log/mongod.log && NODE_ENV='dev' nodemon server.js",
+    "devStop": "echo doudou@78 | sudo -S mongod --shutdown --dbpath /home/anthony/travail/mongodata/ && killall node",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anthony Guyot",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "~1.16.0",
+    "connect-mongo": "^1.3.2",
+    "cookie-parser": "~1.4.3",
+    "express": "~4.14.1",
+    "express-handlebars": "^3.0.0",
+    "express-session": "~1.15.1",
+    "handlebars-delimiters": "^0.1.2",
+    "jade": "^1.11.0",
+    "method-override": "^2.3.9",
+    "mongoose": "^4.8.6",
+    "multer": "^1.3.0",
+    "passport": "~0.2.0",
+    "passport-local": "~1.0.0",
+    "passport-local-mongoose": "~4.0.0",
+    "promise": "^7.1.1"
+  }
+}

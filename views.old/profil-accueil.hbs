@@ -1,0 +1,11 @@
+{{> profil.menu }}
+
+{{> whatsup }}
+
+<section class="mb-4 container">
+	<div class="card-group">
+	{{#each posts}}
+		{{> card.post this}}
+	{{/each}}
+	</div>
+</section>

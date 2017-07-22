@@ -1,0 +1,32 @@
+/*!
+ * From Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ */
+
+// Core variables and mixins
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "bootstrap/custom";
+
+.header{
+	background-position: center;
+	background-size: cover;
+	color: $white;
+	position:relative;
+	border-radius:none;
+	margin-bottom:0;
+}
+
+.header:before{
+	content:'';
+	display:block;
+	width:100%;
+	height:100%;
+	position: absolute;
+	top:0;
+	left:0;
+	background: rgba(75,75,75, .66);
+}
+
+.header > *{
+  position:relative;
+}

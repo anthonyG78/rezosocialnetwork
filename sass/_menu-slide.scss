@@ -1,0 +1,64 @@
+/*!
+ * From Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ */
+
+// Core variables and mixins
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "bootstrap/custom";
+
+.menu{
+  position: fixed;
+  width: 80%;
+  height: 100%;
+  background: #FFF;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  box-shadow: .5em 0 .5em rgba(0,0,0, .33);
+  transform:translateX(-100%);
+  transition: transform .25s ease-in-out;
+}
+
+.menu.open{
+  transform:translateX(0%);
+}
+
+@media screen and (min-width: 1200px){
+  .menu{
+    width: 25%;
+  }
+}
+
+@media screen and (min-width: 992px) and (max-width: 1200px){
+  .menu{
+    width: 40%;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px){
+  .menu{
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 576px)  and (max-width: 768px){
+  .menu{
+    width: 60%;
+  }
+}
+
+body.menu-opened{
+  overflow:hidden;
+}
+body.menu-opened:after{
+  content:'';
+  display: block;
+  position:fixed;
+  width: 100%;
+  height: 100%;
+  top:0;
+  left:0;
+  background-color: rgba(0,0,0, 0.5);
+  z-index:10;
+}

@@ -1,0 +1,23 @@
+html
+	head
+		meta(charset="UTF-8")
+		title!= title
+		link(rel='icon', type="image/x-icon", href='/favicon.gif')
+
+		link(rel='stylesheet', type="text/css", href='/css/bootstrap/bootstrap.css')
+		link(rel='stylesheet', type="text/css", href='/css/font-awesome.min.css')
+		link(rel='stylesheet', type="text/css", href='/css/common.css')
+
+		script(type="text/javascript", src="/js/lib/jquery.js")
+  
+	body(class="bg-faded")
+		header(class="main")
+			div(class="container-fluid navbar")
+				div(class="row")
+					a(class="navbar-brand" href="/")
+						span(class="fa fa-circle-o-notch")
+						span!= "coucou"
+		
+		main(class="")!= error
+
+		footer(class="main")!= "footer"

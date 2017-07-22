@@ -1,0 +1,29 @@
+{{#if user}}
+	<div class="container-fluid navbar bg-inverse">
+		<div class="row">
+			<div class="col-sm-3 col-6">
+				<a href="#" id="menu-bars" class="fa fa-bars"></a>
+				<a class="navbar-brand" href="/"><span class="fa fa-circle-o-notch"></span> {{ conf.app.title }}</a>
+			</div>
+			<div class="col-sm-6 hidden-xs-down">
+				{{> search }}
+			</div>
+			<div class="col-sm-3 col-6 text-white">
+				<a href="/profil/accueil">
+					<img class="rounded-circle" src="{{getAvatar user._id user.avatar}}" width="32px"/>
+					<span>{{user.username}}</span>
+				</a>
+			</div>
+		</div>
+
+		{{> menu }}
+	</div>
+{{else}}
+	<div class="container-fluid navbar">
+		<div class="row">
+			<div class="col-12">
+				<a class="navbar-brand" href="/"><span class="fa fa-circle-o-notch"></span> {{ conf.app.title }}</a>
+			</div>
+		</div>
+	</div>
+{{/if}}

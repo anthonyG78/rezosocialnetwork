@@ -1,0 +1,70 @@
+html
+	head
+		meta(charset="UTF-8")
+		title!= title
+		link(rel='icon', type="image/x-icon", href='/favicon.gif')
+		link(rel='stylesheet', type="text/css", href='/css/bootstrap/bootstrap.css')
+		link(rel='stylesheet', type="text/css", href='/css/font-awesome.min.css')
+		link(rel='stylesheet', type="text/css", href='/css/common.css')
+
+		script(type="text/javascript", src="/js/lib/jquery.js")
+		script(type="text/javascript", src="/js/lib/bootstrap.min.js")
+		script(type="text/javascript", src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js")
+		script(type="text/javascript", src="/js/index.js")
+  
+	body(class="bg-faded")
+		header(class="main")
+			div(class="container-fluid navbar")
+				a(class="navbar-brand" href="/")
+					span(class="fa fa-circle-o-notch")
+					span!= siteName
+		
+		main(class="")
+			div(class="header mb-4 p-5")
+				h1
+					span(class="fa fa-circle-o-notch")
+					span!= siteName
+				p!= slogan
+				form(action="/login", method="POST")
+					div(class="row")
+						div(class="col-md-12 form-group")
+							span(class="h3")!="Connection"
+						div(class="col-md-6 form-group")
+							input(type="text" name="username" value="" class="form-control" placeholder="Pseudo")
+						div(class="col-md-6 form-group")
+							input(type="password" name="password" value="" class="form-control" placeholder="Mot de passe")
+						div(class="col-md-12")
+							input(type="submit" class="btn btn-primary" value="Connection")
+
+			div(class="container")
+				form(action="/register", method="POST")
+					div(class="row")
+						div(class="col-md-12 form-group")
+							span(class="h3")!= "Inscription"
+						div(class="col-md-6 form-group")
+							input(type="text", name="username", class="form-control", placeholder="Pseudo")
+					div(class="row")
+						div(class="col-md-6 form-group")
+							input(type="text", name="firstName", class="form-control", placeholder="Prénom", required)
+						div(class="col-md-6 form-group")
+							input(type="text", name="lastName", class="form-control", placeholder="Nom", required)
+						div(class="col-md-6 form-group")
+							input(type="text", name="email", class="form-control", placeholder="Mail", required)
+						div(class="col-md-6 form-group")
+							input(type="password",  name="password", class="form-control", placeholder="Mot de passe", required)
+					div(class="row")
+						div(class="col-md-12 form-group")
+							span!="age"
+						div(class="col-md-6 form-group")
+							input(class="form-control", type="number", name="birthDay", value="18", min="18")
+						div(class="col-md-6 form-group")
+							label
+								input(type="radio", name="gender", value="homme", checked)
+								!="homme"
+							label
+								input(type="radio", name="gender", value="femme")
+								!="femme"
+						div(class="col-md-12")
+							input(type="submit", class="btn btn-primary", value="Inscription")
+
+		footer(class="main")!= "footer"

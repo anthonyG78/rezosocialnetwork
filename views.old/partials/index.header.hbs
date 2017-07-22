@@ -1,0 +1,25 @@
+<div class="header mb-4 p-{{padding}}">
+	{{#if title}}
+		<h1><span class="fa fa-circle-o-notch"></span> {{title}}</h1>
+		<p>{{slogan}}</p>
+	{{/if}}
+	{{#ifCond error.form "login"}}
+		<div class="alert alert-warning">{{error.message}}</div>
+	{{/ifCond}}
+	<form action="/login", method="POST">
+		<div class="row">
+			<div class="col-md-12 form-group">
+				<span class="h3">Connection</h3>
+			</div>
+			<div class="col-md-6 form-group">
+				<input type="text" name="username" value="" class="form-control" placeholder="Pseudo">
+			</div>
+			<div class="col-md-6 form-group">
+				<input type="password" name="password" value="" class="form-control" placeholder="Mot de passe">
+			</div>
+			<div class="col-md-12">
+				<input type="submit" class="btn btn-primary" value="Connection">
+			</div>
+		</div>
+	</form>
+</div>

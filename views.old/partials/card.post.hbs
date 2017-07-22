@@ -1,0 +1,16 @@
+<div class="card bg-white">
+	<a href="{{user.url}}" class="card-block">
+		<img class="rounded-circle" src="{{getAvatar user._id user.avatar}}" width="32"/>
+		<span class="h4 align-middle">{{user.username}}</span>
+	</a>
+	{{#if image}}
+		<a href="#" class="card-img-top bg-cover" style="background-image:url({{image}})"></a>
+	{{/if}}
+	<div class="card-block">
+		<div><small class="text-muted">{{since}}</small></div>
+		<p class="card-text">{{description}}</p>
+	</div>
+	<div class="card-footer">
+		<span class="badge badge-pill badge-default"><span class="fa fa-comments"></span><span>{{commentCount}}</span></span>
+	</div>
+</div>

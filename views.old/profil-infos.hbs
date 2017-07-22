@@ -1,0 +1,14 @@
+{{> profil.header hidden="hidden-xs-down" imgSize=128 padding=5 h=1}}
+
+{{> profil.menu }}
+
+<section class="mb-4 container">
+	{{#ifCond error.form "avatar"}}
+		<div class="alert alert-warning">{{error.message}}</div>
+	{{/ifCond}}
+	<form method="POST" action="/profil/infos/avatar/" enctype="multipart/form-data">
+		<label>Avatar</label>
+		{{> fileSubmit name="avatar" label="Selectionner..." icon="picture-o"}}
+	    <input class="btn btn-primary" type="submit" name="submit" value="Envoyer" />
+	</form>
+</section>

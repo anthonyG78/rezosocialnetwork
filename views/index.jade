@@ -1,0 +1,51 @@
+html
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		title!= title
+		link(rel='icon', type="image/x-icon", href='/favicon.gif')
+
+		link(rel='stylesheet', type="text/css", href='/css/bootstrap/bootstrap.css')
+		link(rel='stylesheet', type="text/css", href='/css/font-awesome.min.css')
+		link(rel='stylesheet', type="text/css", href='/css/common.css')
+
+		script(type="text/javascript", src="/js/lib/jquery.js")
+		script(type="text/javascript", src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js")
+		script(type="text/javascript", src="/js/lib/bootstrap.min.js")
+		script(type="text/javascript", src="/js/index.js")
+  
+	body(class="bg-faded")
+		header(class="main")
+			div(class="container-fluid navbar bg-inverse")
+				div(class="row")
+					div(class="col-sm-3 col-6")
+						a(href="#" id="menu-bars" class="fa fa-bars")
+						a(class="navbar-brand" href="/")
+							span(class="fa fa-circle-o-notch")
+							span!= siteName
+					div(class="col-sm-6 hidden-xs-down")
+						form(class="input-group" style="margin:0")
+							input(type="text" class="form-control bg-faded" placeholder="Rechercher un ami...")
+							span(class="input-group-btn")
+								button(class="btn btn-primary" type="button")
+									span(class="fa fa-search")
+							div(class="list-group list-autocomplete")
+								a(href="#" class="list-group-item list-group-item-action")!= "Cras justo odio"
+								a(href="#" class="list-group-item list-group-item-action")!= "Dapibus ac facilisis in"
+								a(href="#" class="list-group-item list-group-item-action")!= "Morbi leo risus"
+								a(href="#" class="list-group-item list-group-item-action")!= "Porta ac consectetur ac"
+					div(class="col-sm-3 col-6 text-white text-right")
+						a(href="/profil/accueil")
+							img(class="rounded-circle" src=(user.avatar || "/img/defaultavatar.png" ) width="32px")
+							span!= user.username
+
+		main(class="")
+			div(class="p-5 mb-3 bg-primary", style="background-image:url("+user.background+")")
+				div(class="container text-white")
+					img(class="rounded-circle", src=""+(user.avatar || "/img/defaultavatar.png" )+"", width="64")
+					span(class="h2 align-middle")!= user.username
+			div(class="container")
+				span(class="")!= " " + user._id
+
+
+		footer(class="main")!= "footer"
