@@ -1,5 +1,6 @@
 const express         = require('express');
 const expressSession  = require('express-session');
+const expressGraphQL  = require('express-graphql');
 const methodOverride  = require("method-override");
 const bodyParser      = require('body-parser');
 const cookieParser    = require('cookie-parser');
@@ -39,6 +40,12 @@ passport.deserializeUser(User.deSerialize);
 // TEMPLATE
 app.set('views', './views');
 app.set('view engine', 'jade');
+
+// GRAPHQL
+app.use('/graphql', expressGraphQL({
+    graphiql: true,
+    schema: require('./graphql/schema'),
+}));
 
 // ROUTE
 app.use('/api/secure', require('./middleware/api-secure.js'));
