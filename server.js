@@ -8,7 +8,8 @@ const mongoose        = require('mongoose');
 const MongoStore      = require('connect-mongo')(expressSession);
 const passport        = require('passport');
 const LocalStrategy   = require('passport-local').Strategy;
-const conf            = require('./conf/conf')[process.env.NODE_ENV || 'dev'];
+const { NODE_ENV }    = process.env;
+const conf            = require('./conf/conf')[NODE_ENV || 'dev'];
 
 conf.mongoStore.mongooseConnection = mongoose.connection;
 conf.session.store  = new MongoStore(conf.mongoStore);
@@ -42,10 +43,14 @@ app.set('views', './views');
 app.set('view engine', 'jade');
 
 // GRAPHQL
-app.use('/graphql', expressGraphQL({
-    graphiql: true,
-    schema: require('./graphql/schema'),
-}));
+app.use('/graphql', require('./middleware/api-secure.js'));
+app.use('/graphql', expressGraphQL((req) => ({
+  graphiql: NODE_ENV || 'dev',
+  schema: require('./graphql/schema'),
+  context: {
+    user: req.user,
+  },
+})));
 
 // ROUTE
 app.use('/api/secure', require('./middleware/api-secure.js'));
@@ -80,10 +85,6 @@ process.on('SIGINT', () => {
   var exec = require('child_process').exec;
   var pjson = require('./package.json');
 
-  // exec(pjson.scripts.prestop, function(error, stdout, stderr) {
-  //   process.exit(0);
-  //   exec(pjson.scripts.stop);
-  // });
   exec(pjson.scripts.devStop, (err, stdout, stderr) => {
     process.exit(0);
   });

@@ -3,5 +3,5 @@ const { GraphQLObjectType } = graphql;
 
 module.exports = new GraphQLObjectType({
     name: 'Mutation',
-    fields: {},
+    fields: () => ({}),
 });
