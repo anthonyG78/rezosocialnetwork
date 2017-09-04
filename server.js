@@ -50,9 +50,9 @@ app.use('/graphql', cors(), expressGraphQL((req) => ({
 })));
 
 // ROUTE
-app.use('/', require('./route/index.js')(app));
 app.use('/api/authenticate', require('./route/api/authenticate.js')(app));
 app.use('/api/secure/profil', require('./route/api/profil.js')(app));
+app.use('/', require('./route/index.js')(app));
 app.use(require('./route/error.js'));
 app.use(require('./route/404.js'));
 
