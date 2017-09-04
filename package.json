@@ -10,7 +10,7 @@
     "node": "8.4.0"
   },
   "scripts": {
-    "start": "MONGOLAB_URI='mongodb://anthony:doudou78@ds121494.mlab.com:21494/rezo' node server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Anthony Guyot",
