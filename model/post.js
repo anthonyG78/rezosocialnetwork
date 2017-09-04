@@ -145,7 +145,7 @@ class Posts {
     // WALL
     static getUserWall(userId) {
         return new Promise((resolve, reject) => {
-            this.find({toUserId: userId})
+            this.find({$or: [{toUserId: userId}, {fromUserId: userId}] })
                 .sort({date: defaultDateSort})
                 .exec((err, posts) => {
                     if(err){

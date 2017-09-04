@@ -97,13 +97,15 @@ module.exports  = function(app){
     // COMMENT
     // AJOUTE
     router.post('/:id/comment/', (req, res, next) => {
+        const postId = req.params.id;
+
         if(!req.body.comment) {
              return next('Aucun commentaire');
         }
 
         Access.updatePost(req.user, postId)
             .then(() => {
-                return Posts.addComment(req.user._id, req.params.id, req.body.comment);
+                return Posts.addComment(req.user._id, postId, req.body.comment);
             })
             .then(post => {
                 res.json(post);
