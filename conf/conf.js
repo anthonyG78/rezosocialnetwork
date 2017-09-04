@@ -10,6 +10,9 @@ module.exports = {
 				'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
 			},
 		},
+		client: {
+			path: '/dist/index.html',
+		},
 		jwt: {
 			secretOrKey: 'tasmanianDevil',
 			session: false,
@@ -34,6 +37,9 @@ module.exports = {
 				'Access-Control-Allow-Headers': 'X-Requested-With,Content-Type,Authorization',
 				'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
 			},
+		},
+		client: {
+			path: '/dist/index.html',
 		},
 		jwt: {
 			secretOrKey: 'jwtForRezoApp',

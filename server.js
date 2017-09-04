@@ -16,8 +16,7 @@ const User            = require('./model/accounts');
 // GENERAL
 app.locals.conf = conf;
 app.set('port', conf.server.port);
-app.use("/", express.static(__dirname + '/public/'));
-app.use("/", express.static(__dirname + '/file/'));
+app.use("/", express.static(__dirname + '/dist/'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(methodOverride());
@@ -51,6 +50,7 @@ app.use('/graphql', cors(), expressGraphQL((req) => ({
 })));
 
 // ROUTE
+app.use('/', require('./route/index.js')(app));
 app.use('/api/authenticate', require('./route/api/authenticate.js')(app));
 app.use('/api/secure/profil', require('./route/api/profil.js')(app));
 app.use(require('./route/error.js'));
