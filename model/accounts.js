@@ -3,6 +3,7 @@ const mongoose  	= require('mongoose');
 const passportLM 	= require('passport-local-mongoose');
 const bcrypt 		= require('bcryptjs');
 const Schema 		= new mongoose.Schema(require('./schema/accounts'));
+console.log(process.env.NODE_ENV || 'prod', conf);
 const userMinFields = conf.app.userMinFields;
 
 class Account {
