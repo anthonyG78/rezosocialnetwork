@@ -1,18 +1,10 @@
 const router    = require('express').Router();
 const Posts     = require('../../model/post');
-const Account     = require('../../model/accounts');
+const Account   = require('../../model/accounts');
+const Access = require('../../lib/Access');
 
 module.exports  = function(app){
     // POST
-    // router.get('/', (req, res, next) => {
-    //     Posts.getPostsByUserId(req.user._id)
-    //         .then(posts => {
-    //             res.json(posts);
-    //         })
-    //         .catch(err => {
-    //             return next(err);
-    //         })
-    // });
     router.get('/', (req, res, next) => {
         Account.getPosts(req.user._id)
             .then(posts => {
@@ -22,9 +14,42 @@ module.exports  = function(app){
                 return next(err);
             })
     });
+    
+    // AJOUTE
+    router.post('/', (req, res, next) => {
+        var post = req.body;
+        const fromUserId = req.user._id;
+        const toUserId = post.toUserId;
 
-    // router.post('/', (req, res, next) => {
-    //     Posts.addPost(req.body, req.user._id)
+        if(!toUserId) {
+            return next('Destinataire non renseigné');
+        }
+
+        post.fromUserId = fromUserId;
+
+        Access.createPost(req.user, toUserId)
+            .then(() => {
+                return Posts.addPost(post);
+            })
+            .then(_post => {
+                post = _post;
+                Account.addPost([fromUserId, toUserId], post._id);
+            })
+            .then(modified => {
+                if (fromUserId.toString() !== post.toUserId.toString()) {
+                    Account.addNotification(post.toUserId, 'posts', post._id);
+                }
+
+                res.json(post);
+            })
+            .catch(err => {
+                return next(err);
+            });
+    });
+
+    // AFFICHE
+    // router.get('/:id', (req, res, next) => {
+    //     Posts.getPost(req.params.id)
     //         .then(post => {
     //             res.json(post);
     //         })
@@ -32,40 +57,15 @@ module.exports  = function(app){
     //             return next(err);
     //         });
     // });
-    router.post('/', (req, res, next) => {
-        var post = req.body;
 
-        if(!post.toUserId) {
-            return next('Destinataire non renseigné');
-        }
-
-        post.fromUserId = req.user._id;
-
-        Posts.addPost(post)
-            .then(_post => {
-                post = _post;
-                Account.addPost([post.fromUserId, post.toUserId], post._id);
-            })
-            .then(modified => {
-                res.json(post);
-            })
-            .catch(err => {
-                return next(err);
-            });
-    });
-
-    router.get('/:id', (req, res, next) => {
-        Posts.getPost(req.params.id)
-            .then(post => {
-                res.json(post);
-            })
-            .catch(err => {
-                return next(err);
-            });
-    });
-
+    // MODIFIE
     router.put('/:id', (req, res, next) => {
-        Posts.updatePost(req.params.id, req.body)
+        const postId = req.params.id;
+
+        Access.updatePost(req.user, postId)
+            .then(() => {
+                Posts.updatePost(req.params.id, req.body)
+            })
             .then(post => {
                 res.json(post);
             })
@@ -74,10 +74,19 @@ module.exports  = function(app){
             });
     });
 
+    // SUPPRIME
     router.delete('/:id', (req, res, next) => {
-        Posts.removePost(req.params.id)
-            .then(post => {
-                res.json(post);
+        const postId = req.params.id;
+
+        Access.deletePost(req.user, postId)
+            .then(() => {
+                return Posts.removePost(postId)
+            })
+            .then(() => {
+                return Account.removePost(postId);
+            })
+            .then(() => {
+                res.json(true);
             })
             .catch(err => {
                 return next(err);
@@ -86,12 +95,16 @@ module.exports  = function(app){
 
 
     // COMMENT
+    // AJOUTE
     router.post('/:id/comment/', (req, res, next) => {
         if(!req.body.comment) {
              return next('Aucun commentaire');
         }
 
-        Posts.addComment(req.user._id, req.params.id, req.body.comment)
+        Access.updatePost(req.user, postId)
+            .then(() => {
+                return Posts.addComment(req.user._id, req.params.id, req.body.comment);
+            })
             .then(post => {
                 res.json(post);
             })
@@ -100,15 +113,16 @@ module.exports  = function(app){
             });
     });
 
-    router.delete('/:postId/comment/:commentId', (req, res, next) => {
-        Posts.removeComment(req.params.postId, req.params.commentId)
-            .then(comment => {
-                res.json(comment);
-            })
-            .catch(err => {
-                return next(err);
-            });
-    });
+    // SUPPRIME
+    // router.delete('/:postId/comment/:commentId', (req, res, next) => {
+    //     Posts.removeComment(req.params.postId, req.params.commentId)
+    //         .then(comment => {
+    //             res.json(comment);
+    //         })
+    //         .catch(err => {
+    //             return next(err);
+    //         });
+    // });
 
     return router;
 }

@@ -1,24 +1,17 @@
 const express         = require('express');
-const expressSession  = require('express-session');
 const expressGraphQL  = require('express-graphql');
 const methodOverride  = require("method-override");
 const bodyParser      = require('body-parser');
 const cookieParser    = require('cookie-parser');
 const mongoose        = require('mongoose');
-const MongoStore      = require('connect-mongo')(expressSession);
 const passport        = require('passport');
-const LocalStrategy   = require('passport-local').Strategy;
+const cors            = require('cors');
+const auth            = require('./middleware/authenticate');
 const { NODE_ENV }    = process.env;
 const conf            = require('./conf/conf')[NODE_ENV || 'dev'];
-
-conf.mongoStore.mongooseConnection = mongoose.connection;
-conf.session.store  = new MongoStore(conf.mongoStore);
-
-var server, 
-    // ioServer, 
-    app     = express(),
-    session = expressSession(conf.session),
-    User    = require('./model/accounts');
+const app             = express();
+const User            = require('./model/accounts');
+//const ioServer; 
 
 // GENERAL
 app.locals.conf = conf;
@@ -27,25 +20,30 @@ app.use("/", express.static(__dirname + '/public/'));
 app.use("/", express.static(__dirname + '/file/'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
-app.use(cookieParser());
 app.use(methodOverride());
 
-// SESSION
-app.use(session);
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serialize);
-passport.deserializeUser(User.deSerialize);
+// HEADERS (CORS)
+app.use((req, res, next) => {
+  res.set(conf.server.headers);
+  next();
+});
 
 // TEMPLATE
 app.set('views', './views');
 app.set('view engine', 'jade');
 
+// AUTH
+app.use(auth.initialize());
+passport.use(auth.strategy());
+app.route(['/api/secure/*', '/graphql*']) //NODE_ENV !== 'dev' ? '/graphql*' : ''])
+  .get(auth.authenticate())
+  .post(auth.authenticate())
+  .delete(auth.authenticate())
+  .put(auth.authenticate());
+
 // GRAPHQL
-app.use('/graphql', require('./middleware/api-secure.js'));
-app.use('/graphql', expressGraphQL((req) => ({
-  graphiql: NODE_ENV || 'dev',
+app.use('/graphql', cors(), expressGraphQL((req) => ({
+  graphiql: NODE_ENV == 'dev',
   schema: require('./graphql/schema'),
   context: {
     user: req.user,
@@ -53,10 +51,8 @@ app.use('/graphql', expressGraphQL((req) => ({
 })));
 
 // ROUTE
-app.use('/api/secure', require('./middleware/api-secure.js'));
-app.use('/api/secure/profil', require('./route/api/profil.js')(app));
 app.use('/api/authenticate', require('./route/api/authenticate.js')(app));
-app.use('/', require('./route/index.js')(app));
+app.use('/api/secure/profil', require('./route/api/profil.js')(app));
 app.use(require('./route/error.js'));
 app.use(require('./route/404.js'));
 
@@ -72,7 +68,7 @@ mongoose.connection.once('open', err => {
   console.log('Connection Mongoose >', conf.mongo.uri);
 
   // START server
-  server = app.listen(app.get('port'), () => {
+  const server = app.listen(app.get('port'), () => {
     console.log( 'Server listening on port %d ', app.get('port'));
     console.log('PID: ' + process.pid);
     console.log('');

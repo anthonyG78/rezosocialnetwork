@@ -8,8 +8,6 @@ module.exports = {
     text: {
         type    : String, 
         trim    : true,
-        min     : [10, 'Le texte est trop court (10 caractères min)'],
-        max     : [480, 'Le texte est trop long (480 caractères max)'],
         required : [true, 'Le texte est obligatoire'],
     },
     date        : {

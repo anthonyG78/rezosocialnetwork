@@ -5,15 +5,20 @@ const userMinFields = conf.app.userMinFields;
 const defaultDateSort = -1;
 
 class Posts {
+    // POST
     static getPost(id) {
         return new Promise((resolve, reject) => {
             this.findOne({_id: id})
-                .populate('userId', userMinFields)
-                .populate('comments.userId', userMinFields)
+                // .populate('userId', userMinFields)
+                // .populate('comments.userId', userMinFields)
                 .sort({date: defaultDateSort})
                 .exec((err, docs) => {
                     if(err){
-                        return reject(err);
+                        return reject('Impossible de récuper le post');
+                    }
+
+                    if (!docs) {
+                        reject('Ce post n\'existe pas');
                     }
 
                     resolve(docs);
@@ -29,20 +34,22 @@ class Posts {
                 return reject(err);
             }
 
-            post.save((err) => {
+            post.save((err, data) => {
                 if (err){
-                    return reject(err);
+                    return reject('Impossible d\'ajouter le post');
                 }
-                return resolve(post);
+
+                return resolve(data);
             });
         });
     }
 
     static updatePost(id, post) {
         return new Promise((resolve, reject) => {
-            this.findByIdAndUpdate({_id: id}, post, {new: true}, (err, post) => {
+            this.findByIdAndUpdate({_id: id}, post, {new: true, runValidators: true}, (err, post) => {
                 if(err){
-                    return reject(err);
+                    // return reject((Object.keys(err.errors).map(key => err.errors[key].message)).join(', '));
+                    return reject('Impossible de modifier le post');
                 }
                 resolve(post);
             });
@@ -53,7 +60,7 @@ class Posts {
         return new Promise((resolve, reject) => {
             this.findByIdAndRemove({_id: id}, (err, post) => {
                 if(err){
-                    return reject(err);
+                    return reject('Impossible de supprimer le post');
                 }
 
                 resolve(post);
@@ -61,6 +68,52 @@ class Posts {
         });
     }
 
+    static removePostByUserId(userId) {
+        return new Promise((resolve, reject) => {
+            this.remove(
+                { $or: [ {fromUserId: userId}, {toUserId: userId} ] }, 
+                (err, post) => {
+                    if(err){
+                        return reject('Impossible de supprimer le post');
+                    }
+                    // console.log('removePostByUserId', post);
+                    resolve(post);
+                });
+        });
+    }
+
+    // FOR PRIVILEGES
+    static isAboutUsers(postId, usersId) {
+        return new Promise((resolve, reject) => {
+            this.findOne(
+                { _id: postId, $or: [{fromUserId: { $in: usersId }}, {toUserId: { $in: usersId }}] },
+                { _id: 1})
+                .exec((err, post) => {
+                    if(err){
+                        return reject('Impossible de récuper le post');
+                    }
+
+                    resolve(post ? true : false);
+                });
+        });
+    } 
+
+    static isFromUserId(userId, postId) {
+        return new Promise((resolve, reject) => {
+            this.findOne(
+                { _id: postId, fromUserId: userId },
+                { _id: 1 })
+                .exec((err, post) => {
+                    if(err){
+                        return reject('Impossible de récuper le post');
+                    }
+
+                    resolve(post ? true : false);
+                });
+        });
+    } 
+
+    // COMMENT
     static addComment(userId, postId, comment) {
         return new Promise((resolve, reject) => {
             this.findByIdAndUpdate(
@@ -69,7 +122,7 @@ class Posts {
                 {new: true}, 
                 (err, post) => {
                     if(err){
-                        return reject(err);
+                        return reject('Impossible d\'ajouter un commentaire');
                     }
                     resolve(post);
                 });
@@ -82,169 +135,41 @@ class Posts {
                 {$pull: {"comments": {_id: commentId}}},
                 (err, comment) => {
                     if(err){
-                        return reject(err);
+                        return reject('Impossible de supprimer le commentaire');
                     }
                     resolve(comment);
                 });
         });
     }
 
-    static getPostsByUserId(userId) {
+    // WALL
+    static getUserWall(userId) {
         return new Promise((resolve, reject) => {
-            this.find({userId: userId})
-                .populate('userId', userMinFields)
-                .populate('comments.userId', userMinFields)
+            this.find({toUserId: userId})
                 .sort({date: defaultDateSort})
-                // .limit(10)
-                .exec((err, docs) => {
+                .exec((err, posts) => {
                     if(err){
-                        return reject(err);
+                        return reject('Impossible de récuperer les posts');
                     }
 
-                    resolve(docs);
+                    resolve(posts);
                 });
         });
-    };
+    }
 
-    static getPostsByUsersIds(userIds) {
+    static getCommunityWall(friendsId) {
         return new Promise((resolve, reject) => {
-            this.find({'userId': { $in: userIds }})
-                .populate('userId', userMinFields)
-                .populate('comments.userId', userMinFields)
+            this.find({toUserId: {$in: friendsId}})
                 .sort({date: defaultDateSort})
-                // .limit(10)
-                .exec((err, docs) => {
+                .exec((err, posts) => {
                     if(err){
-                        return reject(err);
+                        return reject('Impossible de récuperer les posts');
                     }
-
-                    resolve(docs);
+                    resolve(posts);
                 });
         });
-    };
+    }
 }
-
-// class Posts {
-//     static getPost(id) {
-//         return new Promise((resolve, reject) => {
-//             this.findOne({_id: id})
-//                 .populate('userId', userMinFields)
-//                 .populate('comments.userId', userMinFields)
-//                 .sort({date: defaultDateSort})
-//                 .exec((err, docs) => {
-//                     if(err){
-//                         return reject(err);
-//                     }
-
-//                     resolve(docs);
-//                 });
-//         });
-//     }
-
-//     static addPost(data, userId) {
-//         return new Promise((resolve, reject) => {
-//             data.userId = userId;
-
-//             try{
-//                 var post = new this(data);
-//             }catch(err){
-//                 return reject(err);
-//             }
-
-//             post.save((err) => {
-//                 if (err){
-//                     return reject(err);
-//                 }
-//                 return resolve(post);
-//             });
-//         });
-//     }
-
-//     static updatePost(id, post) {
-//         return new Promise((resolve, reject) => {
-//             this.findByIdAndUpdate({_id: id}, post, {new: true}, (err, post) => {
-//                 if(err){
-//                     return reject(err);
-//                 }
-//                 resolve(post);
-//             });
-//         });
-//     }
-
-//     static removePost(id) {
-//         return new Promise((resolve, reject) => {
-//             this.findByIdAndRemove({_id: id}, (err, post) => {
-//                 if(err){
-//                     return reject(err);
-//                 }
-
-//                 resolve(post);
-//             });
-//         });
-//     }
-
-//     static addComment(userId, postId, comment) {
-//         return new Promise((resolve, reject) => {
-//             this.findByIdAndUpdate(
-//                 {_id: postId}, 
-//                 {$push: {"comments": {userId: userId, text: comment}}},
-//                 {new: true}, 
-//                 (err, post) => {
-//                     if(err){
-//                         return reject(err);
-//                     }
-//                     resolve(post);
-//                 });
-//         });
-//     }
-
-//     static removeComment(postId, commentId) {
-//         return new Promise((resolve, reject) => {
-//             this.findOneAndUpdate({_id: postId}, 
-//                 {$pull: {"comments": {_id: commentId}}},
-//                 (err, comment) => {
-//                     if(err){
-//                         return reject(err);
-//                     }
-//                     resolve(comment);
-//                 });
-//         });
-//     }
-
-//     static getPostsByUserId(userId) {
-//         return new Promise((resolve, reject) => {
-//             this.find({userId: userId})
-//                 .populate('userId', userMinFields)
-//                 .populate('comments.userId', userMinFields)
-//                 .sort({date: defaultDateSort})
-//                 // .limit(10)
-//                 .exec((err, docs) => {
-//                     if(err){
-//                         return reject(err);
-//                     }
-
-//                     resolve(docs);
-//                 });
-//         });
-//     };
-
-//     static getPostsByUsersIds(userIds) {
-//         return new Promise((resolve, reject) => {
-//             this.find({'userId': { $in: userIds }})
-//                 .populate('userId', userMinFields)
-//                 .populate('comments.userId', userMinFields)
-//                 .sort({date: defaultDateSort})
-//                 // .limit(10)
-//                 .exec((err, docs) => {
-//                     if(err){
-//                         return reject(err);
-//                     }
-
-//                     resolve(docs);
-//                 });
-//         });
-//     };
-// }
 
 Schema.loadClass(Posts);
 

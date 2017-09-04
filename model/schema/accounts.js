@@ -25,7 +25,7 @@ module.exports = {
 	gender 		: {
 		type 	: String, 
 		trim 	: true,
-		enum 	: ['homme', 'femme'],
+		enum 	: ['mal', 'femal'],
 		required : [true, "Le genre est obligatoire"],
 	},
 	email 		: {
@@ -43,14 +43,17 @@ module.exports = {
 	password	: {
 		type 	: String, 
 		trim 	: true,
+		select  : false,
 	},
 	avatar 		: {
 		type 	: String, 
 		trim 	: true,
+		default: "https://www.gravatar.com/avatar/"+(Math.floor(Math.random() * 99) + 1)+"?s=32&d=identicon" // &s=128
 	},
 	background 	: {
 		type 	: String,
 		trim 	: true,
+		default: "/static/background/material-bg-"+(Math.floor(Math.random() * 27) + 1)+".svg",
 	},
 	desription : {
 		type : String,
@@ -68,8 +71,11 @@ module.exports = {
 	        ref: 'accounts',
     	},
     	accepted: {
-    		type: Boolean,
-    		default: false
+    		type: Number,
+    	},
+    	dateMaj: {
+    		type: Date,
+    		default: Date.now,
     	} 
     }],
     posts: [{
@@ -86,7 +92,7 @@ module.exports = {
 	}],
     level: {
     	type: Number,
-    	default: 0,
+    	default: 2,
     	validate : {
 			validator : function (level) {
 				return level >= 0;
@@ -101,5 +107,20 @@ module.exports = {
 	connected 	: {
 		type 	: Boolean, 
 		default : false
+	},
+	notifications: {
+		posts: {
+			type: Array,
+		},
+		friends: {
+			type: Array,
+		},
+		discussions: {
+			type: Array,
+		},
+	},
+	accepted: {
+		type: Number,
+		default: -1,
 	}
 };
