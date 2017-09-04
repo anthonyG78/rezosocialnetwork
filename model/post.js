@@ -1,4 +1,4 @@
-const conf          = require('../conf/conf')[process.env.NODE_ENV || 'prod'];
+const conf          = require('../conf/conf')[process.env.NODE_ENV || 'production'];
 const mongoose      = require('mongoose');
 const Schema        = new mongoose.Schema(require('./schema/post'));
 const userMinFields = conf.app.userMinFields;

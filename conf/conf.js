@@ -28,7 +28,7 @@ module.exports = {
 			userMinFields: '_id username firstName lastName avatar connected'
 		},
 	},
-	prod: {
+	production: {
 		server : {
 			domain : "",
 			port : parseInt(process.env['PORT'] || 9999),
