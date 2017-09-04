@@ -1,3 +1,5 @@
+console.log('authenticate', process.env.NODE_ENV || 'prod');
+process.exit(0);
 const conf      = require('../conf/conf')[process.env.NODE_ENV || 'prod'];
 const passport  = require('passport');
 const Account   = require('../model/accounts');
