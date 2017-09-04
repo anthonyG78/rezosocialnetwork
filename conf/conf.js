@@ -24,5 +24,26 @@ module.exports = {
 			// ageLegal : 18,
 			userMinFields: '_id username firstName lastName avatar connected'
 		},
+	},
+	prod: {
+		server : {
+			domain : "",
+			port : parseInt(process.env['PORT'] || 9999),
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Headers': 'X-Requested-With,Content-Type,Authorization',
+				'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+			},
+		},
+		jwt: {
+			secretOrKey: 'jwtForRezoApp',
+			session: false,
+		},
+		mongo : {
+			uri : process.env.MONGOLAB_URI
+		},
+		app : {
+			userMinFields: '_id username firstName lastName avatar connected'
+		},
 	}
 };
