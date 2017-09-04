@@ -1,4 +1,4 @@
-const conf          = require('../conf/conf')[process.env.NODE_ENV || 'dev'];
+const conf          = require('../conf/conf')[process.env.NODE_ENV || 'prod'];
 const mongoose  	= require('mongoose');
 const passportLM 	= require('passport-local-mongoose');
 const bcrypt 		= require('bcryptjs');

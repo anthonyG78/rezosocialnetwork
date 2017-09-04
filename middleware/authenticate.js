@@ -1,4 +1,4 @@
-const conf      = require('../conf/conf')[process.env.NODE_ENV || 'dev'];
+const conf      = require('../conf/conf')[process.env.NODE_ENV || 'prod'];
 const passport  = require('passport');
 const Account   = require('../model/accounts');
 const jwt       = require('jsonwebtoken');

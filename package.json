@@ -10,6 +10,7 @@
     "node": "5.9.1"
   },
   "scripts": {
+    "start": "node server.js",
     "devStart": "echo doudou@78 | sudo -S mongod --dbpath /home/anthony/travail/mongodata/ --port 27017 --fork --logpath ./var/log/mongod.log && NODE_ENV='dev' nodemon server.js",
     "devStop": "echo doudou@78 | sudo -S mongod --shutdown --dbpath /home/anthony/travail/mongodata/ && killall node",
     "test": "echo \"Error: no test specified\" && exit 1"

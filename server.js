@@ -8,7 +8,7 @@ const passport        = require('passport');
 const cors            = require('cors');
 const auth            = require('./middleware/authenticate');
 const { NODE_ENV }    = process.env;
-const conf            = require('./conf/conf')[NODE_ENV || 'dev'];
+const conf            = require('./conf/conf')[NODE_ENV || 'prod'];
 const app             = express();
 const User            = require('./model/accounts');
 //const ioServer; 

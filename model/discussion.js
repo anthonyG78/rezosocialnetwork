@@ -1,4 +1,4 @@
-const conf          = require('../conf/conf')[process.env.NODE_ENV || 'dev'];
+const conf          = require('../conf/conf')[process.env.NODE_ENV || 'prod'];
 const mongoose      = require('mongoose');
 const Schema        = new mongoose.Schema(require('./schema/discussion'));
 const defaultDateSort = -1;
