@@ -103,7 +103,7 @@ module.exports  = function(app){
              return next('Aucun commentaire');
         }
 
-        Access.updatePost(req.user, postId)
+        Access.createPostComment(req.user, postId)
             .then(() => {
                 return Posts.addComment(req.user._id, postId, req.body.comment);
             })
