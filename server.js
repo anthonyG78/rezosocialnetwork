@@ -60,20 +60,21 @@ app.use(require('./route/404.js'));
 mongoose.Promise = global.Promise;
 mongoose.connect(conf.mongo.uri);
 mongoose.connection.once('open', err => {
-  if(err){
-    console.log('Mongoose error', err);
-    return;
-  }
+  console.log('OK...');
+  // if(err){
+  //   console.log('Mongoose error', err);
+  //   return;
+  // }
 
-  console.log('Connection Mongoose >', conf.mongo.uri);
+  // console.log('Connection Mongoose >', conf.mongo.uri);
 
-  // START server
-  const server = app.listen(app.get('port'), () => {
-    console.log( 'Server listening on port %d ', app.get('port'));
-    console.log('PID: ' + process.pid);
-    console.log('');
-    // ioServer = require('./route/chat.io')(server, session);
-  });
+  // // START server
+  // const server = app.listen(app.get('port'), () => {
+  //   console.log( 'Server listening on port %d ', app.get('port'));
+  //   console.log('PID: ' + process.pid);
+  //   console.log('');
+  //   // ioServer = require('./route/chat.io')(server, session);
+  // });
 });
 
 // catch ctrl-c command
