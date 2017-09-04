@@ -10,7 +10,11 @@ const auth            = require('./middleware/authenticate');
 const { NODE_ENV }    = process.env;
 const conf            = require('./conf/conf')[NODE_ENV || 'prod'];
 const app             = express();
-const User            = require('./model/accounts');
+console.log(conf);
+const conf2          = require('./conf/conf')[process.env.NODE_ENV || 'prod'];
+console.log(conf2);
+process.exit(0);
+// const User            = require('./model/accounts');
 //const ioServer; 
 
 // GENERAL
