@@ -27,10 +27,17 @@ module.exports = {
 			// ageLegal : 18,
 			userMinFields: '_id username firstName lastName avatar connected'
 		},
+		nodemailer: {
+		    service: 'Gmail',
+		    auth: {
+		        user: 'anthony.guyot78@gmail.com',
+		        pass: '80830308@78',
+		    }
+		}
 	},
 	production: {
 		server : {
-			domain : "",
+			domain : "rezosocialnetwork.herokuapp.com/",
 			port : parseInt(process.env['PORT'] || 9999),
 			headers: {
 				'Access-Control-Allow-Origin': '*',
@@ -51,5 +58,12 @@ module.exports = {
 		app : {
 			userMinFields: '_id username firstName lastName avatar connected'
 		},
+		nodemailer: {
+		    service: 'Gmail',
+		    auth: {
+		        user: 'anthony.guyot78@gmail.com',
+		        pass: '80830308@78',
+		    }
+		}
 	}
 };
