@@ -2,6 +2,14 @@ const router    = require('express').Router();
 const Posts     = require('../../model/post');
 const Account   = require('../../model/accounts');
 const Access = require('../../lib/Access');
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'anthony.guyot78@gmail.com',
+        pass: '80830308@78',
+    }
+});
 
 module.exports  = function(app){
     // POST
@@ -37,6 +45,22 @@ module.exports  = function(app){
             })
             .then(modified => {
                 if (fromUserId.toString() !== post.toUserId.toString()) {
+                    return Account.getById(toUserId)
+                        .then((user) => {
+                            const mailOptions = {
+                                from: 'anthony.guyot78@gmail.com',
+                                to: user.email,
+                                subject: 'REZO - nouveau post !',
+                                text: 'Bonjour '+user.username+'Un post nouveau est arrivé !',
+                            };
+                            transporter.sendMail(mailOptions, function(error, info){
+                                if (error) {
+                                    console.log(error);
+                                } else {
+                                    console.log('Email sent: ' + info.response);
+                                }
+                            });
+                        });
                     Account.addNotification(post.toUserId, 'posts', post._id);
                 }
 
