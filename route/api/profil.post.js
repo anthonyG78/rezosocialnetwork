@@ -48,15 +48,21 @@ module.exports  = function(app){
                         })
                         .then((sender) => {
                             Mailer.sendMail({
-                                from: 'rezosocialnetwork@gmail.com',
+                                from: conf.nodemailer.auth.user,
                                 to: user.email,
-                                subject: 'REZO - y a du nouveau !',
-                                html: require('../../views/mailNewPost')({
+                                subject: conf.app.name + ' - y a du nouveau !',
+                                html: require('../../views/mailNewNotification')({
                                     title: 'Nouveau post',
+                                    notification: ' a publié un post sur votre espace.',
+                                    message: post.title,
                                     sender: sender,
                                     user: user,
-                                    post, post,
+                                    action: {
+                                        url: conf.server.domain + '/posts/' + post.id,
+                                        label: 'voir le post', 
+                                    },
                                     app: {
+                                        name: conf.app.name,
                                         url: conf.server.domain,
                                     },
                                 }),

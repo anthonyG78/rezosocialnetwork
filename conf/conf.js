@@ -21,7 +21,7 @@ module.exports = {
 			uri : "mongodb://127.0.0.1:27017/rezo"
 		},
 		app : {
-			// siteName : "REZO",
+			name : "REZO",
 			// slogan: "Ne perdez pas le contact et restez dans toujours dans la zone de vos proches",
 			// shortSlogan : "Restez dans la zone",
 			// ageLegal : 18,
@@ -30,14 +30,14 @@ module.exports = {
 		nodemailer: {
 		    service: 'Gmail',
 		    auth: {
-		        user: 'anthony.guyot78@gmail.com',
-		        pass: '80830308@78',
+		        user: 'rezosocialnetwork@gmail.com',
+		        pass: 'Gas28320',
 		    }
 		}
 	},
 	production: {
 		server : {
-			domain : "rezosocialnetwork.herokuapp.com",
+			domain : "https://rezosocialnetwork.herokuapp.com",
 			port : parseInt(process.env['PORT'] || 9999),
 			headers: {
 				'Access-Control-Allow-Origin': '*',
@@ -56,13 +56,14 @@ module.exports = {
 			uri : process.env.MONGOLAB_URI
 		},
 		app : {
+			name: 'REZO',
 			userMinFields: '_id username firstName lastName avatar connected'
 		},
 		nodemailer: {
 		    service: 'Gmail',
 		    auth: {
-		        user: 'anthony.guyot78@gmail.com',
-		        pass: '80830308@78',
+		        user: 'rezosocialnetwork@gmail.com',
+		        pass: 'Gas28320',
 		    }
 		}
 	}

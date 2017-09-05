@@ -3,6 +3,8 @@ const Discussion     = require('../../model/discussion');
 const Account     = require('../../model/accounts');
 const mongoose      = require('mongoose');
 const Access = require('../../lib/Access');
+const Mailer = require('../../lib/Mailer');
+const conf       = require('../../conf/conf')[process.env.NODE_ENV || 'production'];
 
 module.exports  = function(app){
     // Add a new discussion
@@ -37,6 +39,37 @@ module.exports  = function(app){
                 discussion = _discussion;
                 // And then, reference it at all users concerned
                 return Account.addDiscussion(usersId, discussion._id).then(() => {
+                    let sender = null;
+
+                    Account.getById(usersId)
+                        .then((_sender) => {
+                            sender = _sender;
+                            return Account.getByIds(req.body.usersId);
+                        })
+                        .then((users) => {
+                            users.forEach((user) => {
+                                Mailer.sendMail({
+                                    from: conf.nodemailer.auth.user,
+                                    to: user.email,
+                                    subject: conf.app.name + ' - y a du nouveau !',
+                                    html: require('../../views/mailNewNotification')({
+                                        title: 'Nouvelle discussion',
+                                        notification: ' a ouvert une nouvelle discussion.',
+                                        message: discussion.subject,
+                                        sender: sender,
+                                        user: user,
+                                        action: {
+                                            url: conf.server.domain + '/discussion/' + discussion.id,
+                                            label: 'voir la discussion', 
+                                        },
+                                        app: {
+                                            name: conf.app.name,
+                                            url: conf.server.domain,
+                                        },
+                                    }),
+                                });
+                            });
+                        });
                     Account.addNotification(req.body.usersId, 'discussions', discussion._id);
                 });
             })

@@ -1,6 +1,8 @@
 const router    = require('express').Router();
 const Account     = require('../../model/accounts');
 const authenticate = require('../../middleware/authenticate');
+const Mailer = require('../../lib/Mailer');
+const conf       = require('../../conf/conf')[process.env.NODE_ENV || 'production'];
 
 module.exports  = function(app){
     // CHERCHER
@@ -56,6 +58,35 @@ module.exports  = function(app){
             .then(user => {
                 return Account.addFriend(friendId, userId, 1)
                     .then((friend) => {
+                        let user = null;
+
+                        Account.getById(friendId)
+                            .then((_user) => {
+                                user = _user;
+                                return Account.getById(userId);
+                            })
+                            .then((sender) => {
+                                Mailer.sendMail({
+                                    from: conf.nodemailer.auth.user,
+                                    to: user.email,
+                                    subject: conf.app.name + ' - y a du nouveau !',
+                                    html: require('../../views/mailNewNotification')({
+                                        title: 'Nouvel ami ?',
+                                        notification: ' vous a demandé en ami !',
+                                        message: 'Soyons amis :)',
+                                        sender: sender,
+                                        user: user,
+                                        action: {
+                                            url: conf.server.domain + '/friend/' + sender.id,
+                                            label: 'voir son profil', 
+                                        },
+                                        app: {
+                                            name: conf.app.name,
+                                            url: conf.server.domain,
+                                        },
+                                    }),
+                                });
+                            });
                         Account.addNotification(friendId, 'friends', userId);
                     });
             })
