@@ -4,7 +4,7 @@ const Account   = require('../../model/accounts');
 const Access = require('../../lib/Access');
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'Gmail',
     auth: {
         user: 'anthony.guyot78@gmail.com',
         pass: '80830308@78',
@@ -45,7 +45,7 @@ module.exports  = function(app){
             })
             .then(modified => {
                 if (fromUserId.toString() !== post.toUserId.toString()) {
-                    return Account.getById(toUserId)
+                    Account.getById(toUserId)
                         .then((user) => {
                             const mailOptions = {
                                 from: 'anthony.guyot78@gmail.com',
