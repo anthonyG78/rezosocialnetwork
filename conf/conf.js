@@ -37,7 +37,7 @@ module.exports = {
 	},
 	production: {
 		server : {
-			domain : "rezosocialnetwork.herokuapp.com/",
+			domain : "rezosocialnetwork.herokuapp.com",
 			port : parseInt(process.env['PORT'] || 9999),
 			headers: {
 				'Access-Control-Allow-Origin': '*',
