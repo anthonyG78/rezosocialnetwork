@@ -146,7 +146,13 @@ module.exports  = function(app){
             .then(post => {
                 return Posts.getPost(postId)
                     .then((post) => {
-                        if (post.fromUserId !== post.toUserId) {
+                        const fromUserId = post.fromUserId.toString();
+                        const toUserId = post.toUserId.toString();
+
+                        if (userId.toString() !== fromUserId && userId.toString() !== toUserId) {
+                            Account.addNotificationFor([post.fromUserId, post.toUserId] , 'posts', post._id);
+                        } else {
+                            const targetUserId = userId.toString() == fromUserId ? toUserId : fromUserId;
                             Account.addNotificationFor(targetUserId , 'posts', post._id);
                         }
                     });
