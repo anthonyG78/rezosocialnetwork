@@ -75,6 +75,7 @@ const UserType = new GraphQLObjectType({
             }
         },
         notifications: { type: require('./notification') },
+        state: { type: GraphQLBoolean },
     })
 });
 

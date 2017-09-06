@@ -58,12 +58,12 @@ module.exports  = {
     login: function(req, res, next) {
         return new Promise((resolve, reject) => {
             const body = req.body;
-            Account.authenticate()(body.username, body.password, (err, user) => {
+            Account.authenticate()(body.email, body.password, (err, user) => {
                 if(err) {
                     return reject(err);
                 }
 
-                if(!user) {
+                if(!user || user.state === false) {
                     return reject('Pseudo ou mot de passe incorrect');
                 }
 

@@ -63,12 +63,21 @@ class Account {
 
     static userExists(userId) {
         return new Promise((resolve, reject) => {
-            this.findOne({_id: userId}, {_id: 1}, (err, user) => {
+            this.findOne({_id: userId}, {_id: 1, state: 1}, (err, user) => {
                 if(err) {
                     return reject('Impossible d\'acceder à ce membre');
                 }
 
-                resolve(user !== null ? true : false);
+                if(!user) {
+                    return reject('Ce membre n\'existe pas');
+                }
+
+                if(user.state == false) {
+                    return reject('Ce membre n\'existe plus');
+                }
+
+                // resolve(user !== null ? true : false);
+                resolve(user);
             });
         });
     }
@@ -142,6 +151,32 @@ class Account {
                         resolve(user);
                     });
             });
+        });
+    }
+
+    static desactiveProfil(userId) {
+        return new Promise((resolve, reject) => {
+            this.findByIdAndUpdate(
+                {_id: userId},
+                { $set: {
+                    state: false, 
+                    email: null, 
+                    connected: false, 
+                    password: null, 
+                    hash: null, 
+                    salt: null,
+                    friends: null,
+                    posts: null,
+                    discussions: null,
+                    notifications: null,
+                }},
+                {new: true},
+                (err, user) => {
+                    if(err) {
+                        return reject('Impossible de supprimer le profil');
+                    }
+                     resolve(user);
+                });
         });
     }
 
@@ -590,7 +625,9 @@ class Account {
 }
 
 Schema.loadClass(Account);
-Schema.plugin(passportLM, {});
+Schema.plugin(passportLM, {
+    usernameField: 'email',
+});
 // Schema.index({
 //     username: 'text',
 //     firstName: 'text',

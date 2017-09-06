@@ -119,6 +119,10 @@ module.exports = {
 			type: Array,
 		},
 	},
+	state: {
+		type: Boolean,
+		default: true,
+	},
 	accepted: {
 		type: Number,
 		default: -1,

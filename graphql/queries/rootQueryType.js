@@ -35,6 +35,15 @@ module.exports = new GraphQLObjectType({
 
                     return UserModel.getById(id)
                         .then((user) => {
+                            if(user.state == false) {
+                                return {
+                                    _id: user._id,
+                                    id: user.id,
+                                    id: user.id,
+                                    username: user.username,
+                                    state: user.state,
+                                };
+                            }
                             // Hide email if user not friend or self not Admin
                             if (args.id !== selfId) {
                                 let isFriend = false;

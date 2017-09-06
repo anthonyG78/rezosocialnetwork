@@ -71,7 +71,8 @@ module.exports  = function(app){
 
         Access.deleteUser(req.user, userId)
             .then(() => {
-                return Account.deleteAllNotificationFrom(userId);
+                return Account.desactiveProfil(userId);
+                // return Account.deleteAllNotificationFrom(userId);
             })
             // .then(() =>{
             //     return Account.deleteProfil(userId);
