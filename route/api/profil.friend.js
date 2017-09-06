@@ -150,7 +150,36 @@ module.exports  = function(app){
             //     // Update self data
             //     return authenticate.update(req, user);
             // })
-            .then(friends => {
+            .then((friends) => {
+                Account.getById(friendId)
+                    .then((_user) => {
+                        user = _user;
+                        return Account.getById(userId);
+                    })
+                    .then((sender) => {
+                        Mailer.sendMail({
+                            from: conf.nodemailer.auth.user,
+                            to: user.email,
+                            subject: conf.app.name + ' - y a du nouveau !',
+                            html: require('../../views/mailNewNotification')({
+                                title: 'Nouvel ami !',
+                                notification: ' vous a accepté en ami !',
+                                message: 'Nous sommes amis, nous pouvons communiquer ensemble et partager des posts à présent :D',
+                                sender: sender,
+                                user: user,
+                                action: {
+                                    url: conf.server.domain + '/friend/' + sender.id,
+                                    label: 'voir son profil',
+                                },
+                                app: {
+                                    name: conf.app.name,
+                                    url: conf.server.domain,
+                                },
+                            }),
+                        });
+                    });
+            })
+            .then(() => {
                 res.json(true);
             })
             .catch(err => {
@@ -176,6 +205,35 @@ module.exports  = function(app){
             })
             .then((friend) => {
                 return Account.deleteNotificationFor(userId, 'friends', friendId);
+            })
+            .then(() => {
+                Account.getById(friendId)
+                    .then((_user) => {
+                        user = _user;
+                        return Account.getById(userId);
+                    })
+                    .then((sender) => {
+                        Mailer.sendMail({
+                            from: conf.nodemailer.auth.user,
+                            to: user.email,
+                            subject: conf.app.name + ' - y a du nouveau !',
+                            html: require('../../views/mailNewNotification')({
+                                title: 'Refus d\'amitié',
+                                notification: ' ne souhaite pas devenir votre ami',
+                                message: 'Un de perdu, dix de retrouvés. Il y a d\'autres personnes sur REZO qui méritent votre amitié !',
+                                sender: sender,
+                                user: user,
+                                action: {
+                                    url: conf.server.domain,
+                                    label: 'aller sur REZO',
+                                },
+                                app: {
+                                    name: conf.app.name,
+                                    url: conf.server.domain,
+                                },
+                            }),
+                        });
+                    });
             })
             .then(() => {
                 res.json(true);
