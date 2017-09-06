@@ -43,7 +43,7 @@ module.exports  = {
                     return reject('Cet utilisateur existe déjà');
                 }
 
-                Account.authenticate()(body.username, password, (err, user) => {
+                Account.authenticate()(body.email, password, (err, user) => {
                     if (err) {
                         return reject(err);
                     }
