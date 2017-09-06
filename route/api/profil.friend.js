@@ -87,7 +87,7 @@ module.exports  = function(app){
                                     }),
                                 });
                             });
-                        Account.addNotification(friendId, 'friends', userId);
+                        Account.addNotificationFor(friendId, 'friends', userId);
                     });
             })
             .then(friend => {
@@ -114,7 +114,13 @@ module.exports  = function(app){
             .then(user => {
                 return Account.removeFriend(friendId, userId);
             })
-            .then(friend => {
+            .then((friend) => {
+                return Account.deleteNotificationFor(userId, 'friends', friendId);
+            })
+            .then(() => {
+                return Account.deleteNotificationFor(friendId, 'friends', userId);
+            })
+            .then(() => {
                 res.json({friend: true});
             })
             .catch(err => {
@@ -168,7 +174,10 @@ module.exports  = function(app){
             .then(user => {
                 return Account.removeFriend(friendId, userId);
             })
-            .then(friend => {
+            .then((friend) => {
+                return Account.deleteNotificationFor(userId, 'friends', friendId);
+            })
+            .then(() => {
                 res.json(true);
             })
             .catch(err => {

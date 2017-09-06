@@ -68,7 +68,7 @@ module.exports  = function(app){
                                 }),
                             });
                         });
-                    Account.addNotification(post.toUserId, 'posts', post._id);
+                    Account.addNotificationFor(post.toUserId, 'posts', post._id);
                 }
 
                 res.json(post);
@@ -115,6 +115,9 @@ module.exports  = function(app){
             })
             .then(() => {
                 return Account.removePost(postId);
+            })
+            .then(() => {
+                return Account.deleteNotification('posts', postId);
             })
             .then(() => {
                 res.json(true);

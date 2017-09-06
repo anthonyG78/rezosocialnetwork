@@ -104,9 +104,15 @@ class Account {
 
     static updateProfil(userId, profil) {
         return new Promise((resolve, reject) => {
+            const filtered = {};
+            Object.keys(profil).forEach(function(key) {
+                if (profil[key] !== "") {
+                    filtered[key] = profil[key];
+                }
+            });
             this.findOneAndUpdate(
                 { _id: userId },
-                { $set: profil }, 
+                { $set: filtered }, 
                 { new: true }, 
                 (err, user) => {
                     if (err) {
@@ -452,7 +458,7 @@ class Account {
     }
 
     // NOTIFICATIONS
-    static getNotifications(userId) {
+    static getNotificationsFor(userId) {
         return new Promise((resolve, reject) => {
             this.findOne({_id: userId}, {notifications: 1})
                 .exec((err, user) => {
@@ -465,7 +471,7 @@ class Account {
         });
     }
 
-    static deleteNotification(userId, key, value) {
+    static deleteNotificationFor(userId, key, value) {
         return new Promise((resolve, reject) => {
             let update;
 
@@ -491,7 +497,68 @@ class Account {
         });
     }
 
-    static addNotification(userId, notificationKey, value) {
+    static deleteNotification(key, value) {
+        return new Promise((resolve, reject) => {
+            let update;
+
+            if (!value) {
+                update = { $set: {} };
+                update.$set["notifications." + key] = [];
+            } else {
+                update = { $pull: {} };
+                update.$pull["notifications." + key] = mongoose.Types.ObjectId(value);
+            }
+
+            this.update({}, 
+                update,
+                {new: true, multi: true},
+                (err, user) => {
+                    if(err){
+                        return reject('Impossible de supprimer des notifications');
+                    }
+
+                    resolve(!user ? [] : user.notifications);
+                });
+        });
+    }
+
+    static deleteAllNotificationFrom(userId) {
+        return new Promise((resolve, reject) => {
+            this.findOne({_id: userId}, (err, user) => {
+                if (err || !user) {
+                   reject('Impossible de supprimer toutes les notifications'); 
+                }
+
+                const mongooseTypesObjectId = mongoose.Types.ObjectId;
+                const friendsId = user.friends.map(friend => mongooseTypesObjectId(friend._id));
+                const postsId = user.posts.map(post => mongooseTypesObjectId(post));
+                const dicussionsId = user.discussions.map(discussion => mongooseTypesObjectId(discussion));
+                const update = {
+                    $pull: {},
+                    $pullAll: {},
+                };
+
+                if (friendsId.length) {
+                    // update.$pull.friends = userId;
+                    update.$pull['notifications.friends'] = userId;
+
+                    if (postsId.length) {
+                        // update.$pullAll.posts = postsId;
+                        update.$pullAll['notifications.posts'] = postsId;
+                    }
+                    if (dicussionsId.length) {
+                        // update.$pullAll.dicussions = dicussionsId;
+                        update.$pullAll['notifications.discussions'] = dicussionsId;
+                    }
+                    console.log(friendsId, update);
+                } else {
+                    // resolve(true);
+                }
+            });
+        });
+    }
+
+    static addNotificationFor(userId, notificationKey, value) {
         return new Promise((resolve, reject) => {
             const update = {
                 $push: {},

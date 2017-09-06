@@ -70,7 +70,7 @@ module.exports  = function(app){
                                 });
                             });
                         });
-                    Account.addNotification(req.body.usersId, 'discussions', discussion._id);
+                    Account.addNotificationFor(req.body.usersId, 'discussions', discussion._id);
                 });
             })
             .then(discussionId => {
@@ -141,7 +141,10 @@ module.exports  = function(app){
                 if(usersId.length <= 2) {
                     return Account.removeDiscussion(usersId, discussionId).then(() => {
                         // Delete discussion if only one user is present
-                        Discussion.removeDiscussion(discussionId);
+                        return Discussion.removeDiscussion(discussionId)
+                            .then(() => {
+                                return Account.deleteNotification('discussions', discussionId);
+                            });
                     });
                 } else {
                     // Delete the user ID of discussion data
@@ -175,7 +178,7 @@ module.exports  = function(app){
                 const index = discussion.usersId.indexOf(req.user._id);
                 discussion.usersId.splice(index, 1);
                 
-                Account.addNotification(discussion.usersId, 'discussions', discussion._id);
+                Account.addNotificationFor(discussion.usersId, 'discussions', discussion._id);
                 res.json(discussion);
             })
             .catch(err => {

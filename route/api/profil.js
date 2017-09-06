@@ -70,15 +70,18 @@ module.exports  = function(app){
         const userId = req.params.id || req.user._id;
 
         Access.deleteUser(req.user, userId)
-            .then(() =>{
-                return Account.deleteProfil(userId);
+            .then(() => {
+                return Account.deleteAllNotificationFrom(userId);
             })
-            .then((data) => {
-                return Posts.removePostByUserId(userId);
-            })
-            .then((data) => {
-                return Discussion.pullUserFromDiscussion(userId);
-            })
+            // .then(() =>{
+            //     return Account.deleteProfil(userId);
+            // })
+            // .then((data) => {
+            //     return Posts.removePostByUserId(userId);
+            // })
+            // .then((data) => {
+            //     return Discussion.pullUserFromDiscussion(userId);
+            // })
             .then((data) => {
                 res.json(true);
             })

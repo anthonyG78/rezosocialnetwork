@@ -3,7 +3,7 @@ const Account     = require('../../model/accounts');
 
 module.exports  = function(app){
     router.get('/', (req, res, next) => {
-        Account.getNotifications(req.user._id)
+        Account.getNotificationsFor(req.user._id)
             .then(notifications => {
                 res.json(notifications);
             })
@@ -15,7 +15,7 @@ module.exports  = function(app){
     router.delete('/', (req, res, next) => {
         const notification = req.body;
 
-        Account.deleteNotification(req.user._id, notification.key, notification.value)
+        Account.deleteNotificationFor(req.user._id, notification.key, notification.value)
             .then(notifications => {
                 res.json(notifications);
             })
