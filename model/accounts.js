@@ -87,8 +87,11 @@ class Account {
             var validChar = 'a-zA-A0-9_-';
             var pattern = new RegExp("^[" + validChar + "]{0,2}" + term + "[" + validChar + "]*", "i");
 
-            this.find()
-                .or([{username: {$regex: pattern}}, {firstName: {$regex: pattern}}, {lastName: {$regex: pattern}}])
+            this.find({ $and: [
+                    { state: true },
+                    { $or: [{username: {$regex: pattern}}, {firstName: {$regex: pattern}}, {lastName: {$regex: pattern}}] }
+                ] })
+                // .or([{username: {$regex: pattern}}, {firstName: {$regex: pattern}}, {lastName: {$regex: pattern}}])
                 .limit(limit)
                 .exec((err, users) => {
                     if(err){
@@ -186,7 +189,7 @@ class Account {
             var validChar = 'a-zA-A0-9_-';
             var pattern = new RegExp("^[" + validChar + "]{0,2}" + term + "[" + validChar + "]*", "i");
 
-            this.find({ _id: { $in: usersId } })
+            this.find({ $and: [{_id: { $in: usersId }}, {state: true}] })
                 .or([{username: {$regex: pattern}}, {firstName: {$regex: pattern}}, {lastName: {$regex: pattern}}])
                 .limit(limit)
                 .exec((err, users) => {
@@ -304,20 +307,30 @@ class Account {
             //             return friend._id;
             //         }) : []);
             //     });
-
             this.aggregate([
                 { $match: { _id: mongoose.Types.ObjectId(userId) } },
                 { $unwind : "$friends" },
                 { $sort : {"friends.accepted": sort || 1} },
                 { $group: {"_id": "$_id", "friends": {"$push": "$friends"} } },
             ], (err, user) => {
-                this.populate( user[0], { path: 'friends._id' }, (err, user) => {
+                this.populate( user[0], {path: 'friends._id', match: {state: true}}, (err, user) => {
                     if(err){
                         return reject('Impossible de récupérer la liste d\'amis');
                     }
-                    resolve(user ? user.friends.map(friend => {
-                        return friend._id;
-                    }) : []);
+                    if(user) {
+                        let result = [];
+                        user.friends.forEach(friend => {
+                            if(friend._id) {
+                                result.push(friend._id);
+                            }
+                        })
+                        resolve(result);
+                    } else {
+                        resolve([]);
+                    }
+                    // resolve(user ? user.friends.map(friend => {
+                    //     return friend._id;
+                    // }) : []);
                 });
             });
         });
