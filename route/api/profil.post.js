@@ -4,6 +4,7 @@ const Account   = require('../../model/accounts');
 const Access = require('../../lib/Access');
 const Mailer = require('../../lib/Mailer');
 const conf       = require('../../conf/conf')[process.env.NODE_ENV || 'production'];
+const mongoose = require('mongoose');
 
 module.exports  = function(app){
     // POST
@@ -132,6 +133,7 @@ module.exports  = function(app){
     // AJOUTE
     router.post('/:id/comment/', (req, res, next) => {
         const postId = req.params.id;
+        const userId = req.user._id;
 
         if(!req.body.comment) {
              return next('Aucun commentaire');
@@ -139,7 +141,15 @@ module.exports  = function(app){
 
         Access.createPostComment(req.user, postId)
             .then(() => {
-                return Posts.addComment(req.user._id, postId, req.body.comment);
+                return Posts.addComment(userId, postId, req.body.comment);
+            })
+            .then(post => {
+                return Posts.getPost(postId)
+                    .then((post) => {
+                        if (post.fromUserId !== post.toUserId) {
+                            Account.addNotificationFor(targetUserId , 'posts', post._id);
+                        }
+                    });
             })
             .then(post => {
                 res.json(post);
